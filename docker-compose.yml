@@ -19,7 +19,6 @@ services:
       - RABBITMQ_DEFAULT_PASS=tungnd
     network_mode: host
     privileged: true
-    restart: unless-stopped
 
   rabbitmq-2:
     image: rabbitmq:3-management
@@ -38,7 +37,6 @@ services:
       - RABBITMQ_DEFAULT_PASS=tungnd
     network_mode: host
     privileged: true
-    restart: unless-stopped
 
   rabbitmq-3:
     image: rabbitmq:3-management
@@ -57,4 +55,3 @@ services:
       - RABBITMQ_DEFAULT_PASS=tungnd
     network_mode: host
     privileged: true
-    restart: unless-stopped
