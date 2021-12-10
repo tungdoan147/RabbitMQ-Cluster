@@ -1,78 +1,60 @@
-version: '3.7'
-
-volumes:
-  rabbitmq_volume:
+version: "3"
 
 services:
-  rabbitmq1:
-    image: tungtv202/rabbitmq_ha_qq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    hostname: rabbitmq1
+
+  rabbitmq-1:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-1
+    hostname: rabbitmq-1
+    extra_hosts:
+      - "rabbitmq-1:172.16.88.145"
+      - "rabbitmq-2:172.16.88.146"
+      - "rabbitmq-3:172.16.88.147"
     volumes:
-      - rabbitmq_volume:/var/lib/rabbitmq
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.hostname == ip-172-16-88-145
-      resources:
-        limits:
-          cpus: '1'
-          memory: '500MB'
-        reservations:
-          cpus: '0.5'
-          memory: '50MB'
-      restart_policy:
-        condition: on-failure
+      - /etc/localtime:/etc/localtime:ro
+      - /data/rabbitmq:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=cluster_cookie
+      - RABBITMQ_DEFAULT_USER=tungnd  
+      - RABBITMQ_DEFAULT_PASS=tungnd
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
 
-
-  rabbitmq2:
-    image: tungtv202/rabbitmq_ha_qq
-    ports:
-      - "5677:5672"
-      - "15677:15672"
-#    cap_add:
-#      - ALL
-    hostname: rabbitmq2
+  rabbitmq-2:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-2
+    hostname: rabbitmq-2
+    extra_hosts:
+      - "rabbitmq-1:172.16.88.145"
+      - "rabbitmq-2:172.16.88.146"
+      - "rabbitmq-3:172.16.88.147"
     volumes:
-      - rabbitmq_volume:/var/lib/rabbitmq
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.hostname == ip-172-16-88-146
-      resources:
-        limits:
-          cpus: '1'
-          memory: '500MB'
-        reservations:
-          cpus: '0.5'
-          memory: '50MB'
-      restart_policy:
-        condition: on-failure
+      - /etc/localtime:/etc/localtime:ro
+      - /data/rabbitmq:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=cluster_cookie
+      - RABBITMQ_DEFAULT_USER=tungnd
+      - RABBITMQ_DEFAULT_PASS=tungnd
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
 
-
-  rabbitmq3:
-    image: tungtv202/rabbitmq_ha_qq
-    ports:
-      - "5666:5672"
-      - "15666:15672"
-    hostname: rabbitmq3
+  rabbitmq-3:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-3
+    hostname: rabbitmq-3
+    extra_hosts:
+      - "rabbitmq-1:172.16.88.145"
+      - "rabbitmq-2:172.16.88.146"
+      - "rabbitmq-3:172.16.88.147"
     volumes:
-      - rabbitmq_volume:/var/lib/rabbitmq
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.hostname == ip-172-16-88-147
-      resources:
-        limits:
-          cpus: '1'
-          memory: 500MB
-        reservations:
-          cpus: '0.5'
-          memory: 50MB
-      restart_policy:
-        condition: on-failure
+      - /etc/localtime:/etc/localtime:ro
+      - /data/rabbitmq:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=cluster_cookie
+      - RABBITMQ_DEFAULT_USER=tungnd
+      - RABBITMQ_DEFAULT_PASS=tungnd
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
